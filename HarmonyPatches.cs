@@ -11,8 +11,8 @@ namespace BUTTLYSS
     // {
     //     static void Postfix(ShakeResult _result)
     //     {
-    //         if (!ButtplugManager.ForwardPatchedEvents) return;
-    //         ButtplugManager.Vibrate(_result.);
+    //         if (!ButtlyssProperties.ForwardPatchedEvents) return;
+    //         ButtplugManager.Vibrate(1);
     //     }
     // }
 
@@ -20,9 +20,9 @@ namespace BUTTLYSS
     [HarmonyPatch(typeof(Button), "Press")]
     public class ButtonPatch
     {
-        static void Postfix()
-        {
-            if (!ButtplugManager.ForwardPatchedEvents) return;
+        static void Postfix() {
+            if (!ButtlyssProperties.ForwardPatchedEvents)
+                return;
             ButtplugManager.Tap(true);
         }
     }
@@ -30,11 +30,10 @@ namespace BUTTLYSS
     [HarmonyPatch(typeof(PlayerMove), nameof(PlayerMove.Set_MovementAction))]
     public class MovementPatch
     {
-        static MovementAction Postfix(MovementAction _mA)
-        {
-            if (!ButtplugManager.ForwardPatchedEvents) return _mA;
-            switch (_mA)
-            {
+        static void Postfix(MovementAction _mA) {
+            if (!ButtlyssProperties.ForwardPatchedEvents)
+                return;
+            switch (_mA) {
                 case MovementAction.JUMP:
                     ButtplugManager.Tap();
                     break;
@@ -51,7 +50,7 @@ namespace BUTTLYSS
                     break;
             }
 
-            return _mA;
+            return;
         }
     }
 }
