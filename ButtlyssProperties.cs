@@ -14,6 +14,8 @@ namespace BUTTLYSS
         public static float StickForNormal => 2.0f;
         public static float SoftStickFor => 0.2f;
 
+        public static float TapSpeed = 0.1f;
+
         public static float TimeSinceVibes;
 
         public static void ResetVibeTimes()

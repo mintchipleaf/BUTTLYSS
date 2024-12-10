@@ -1,6 +1,6 @@
 ﻿namespace BUTTLYSS
 {
-    internal class PluginInfo
+    internal static class PluginInfo
     {
         public const string GUID = "dev.mintchipleaf.buttlyss";
         public const string NAME = "BUTTLYSS";
