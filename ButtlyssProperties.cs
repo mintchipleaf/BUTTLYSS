@@ -1,26 +1,37 @@
 namespace BUTTLYSS
 {
-    public enum InputMode { None = 0, Varied = 1, ContinuousRank = 2, Passthrough = 3 }
+    /// <summary>
+    /// Types of vibration inputs
+    /// </summary>
+    public enum InputMode { None = 0, Varied = 1, Passthrough = 2 }
 
-    public static class ButtlyssProperties
+    /// <summary>
+    /// User-changable static properties related to buttplug operation
+    /// </summary>
+    public static class Properties
     {
+        /// <summary>
+        /// Immediately stops all current and future vibrations
+        /// </summary>
         public static bool EmergencyStop = false;
 
+        /// <summary>
+        /// Type of vibration inputs
+        /// </summary>
         public static InputMode InputMode = InputMode.Varied;
+        /// <summary>
+        /// Whether event-specific vibrations should be sent to buttplug
+        /// </summary>
         public static bool ForwardPatchedEvents => InputMode == InputMode.Varied;
 
-        public static float CurrentSpeed;
+        /// <summary>
+        /// Longest duration for a single vibration command
+        /// </summary>
+        public static float MaxVibeCommandLength => 0.2f;
 
-        public static float StickForNormal => 2.0f;
-        public static float SoftStickFor => 0.2f;
-
+        /// <summary>
+        /// Speed of all tap commands
+        /// </summary>
         public static float TapSpeed = 0.1f;
-
-        public static float TimeSinceVibes;
-
-        public static void ResetVibeTimes()
-        {
-            TimeSinceVibes = StickForNormal - SoftStickFor;
-        }
     }
 }

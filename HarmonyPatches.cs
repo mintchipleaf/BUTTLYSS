@@ -16,7 +16,8 @@ namespace BUTTLYSS
     {
         static void Postfix(float deltaTime, ShakeInstance __instance)
         {
-            if (!ButtlyssProperties.ForwardPatchedEvents) return;
+            if (!Properties.ForwardPatchedEvents)
+                return;
             ButtplugManager.Vibrate(Mathf.Clamp01(__instance.CurrentStrength / __instance.ShakeParameters.strength));
         }
     }
@@ -28,9 +29,9 @@ namespace BUTTLYSS
     public static class ButtonPatch
     {
         static void Prefix() {
-            if (!ButtlyssProperties.ForwardPatchedEvents)
+            if (!Properties.ForwardPatchedEvents)
                 return;
-            ButtplugManager.Tap(true);
+            ButtplugManager.Tap();
         }
     }
 
@@ -41,7 +42,7 @@ namespace BUTTLYSS
     public static class MovementPatch
     {
         static void Set_MovementAction_Postfix(MovementAction _mA) {
-            if (!ButtlyssProperties.ForwardPatchedEvents)
+            if (!Properties.ForwardPatchedEvents)
                 return;
             switch (_mA) {
                 case MovementAction.JUMP:
@@ -85,7 +86,7 @@ namespace BUTTLYSS
 	{
 		[HarmonyPrefix]
 		public static void Postfix(string _skillName) {
-            if (!ButtlyssProperties.ForwardPatchedEvents)
+            if (!Properties.ForwardPatchedEvents)
                 return;
             ButtplugManager.Vibrate(0.5f);
         }
@@ -99,9 +100,9 @@ namespace BUTTLYSS
 	{
 		[HarmonyPrefix]
 		public static void Subtract_health_Prefix(StatusEntity __instance, int _value) {
-            if (!ButtlyssProperties.ForwardPatchedEvents)
+            if (!Properties.ForwardPatchedEvents)
                 return;
-            float relativeSpeed = Mathf.Max(ButtlyssProperties.TapSpeed, _value / __instance._currentHealth);
+            float relativeSpeed = Mathf.Max(Properties.TapSpeed, _value / __instance._currentHealth);
             ButtplugManager.Vibrate(relativeSpeed);
         }
     }
