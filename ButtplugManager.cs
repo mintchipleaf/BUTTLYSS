@@ -179,7 +179,7 @@ namespace BUTTLYSS
             try {
                 await buttplugClient.ConnectAsync(new ButtplugWebsocketConnectorOptions(uri));
 
-                Task.Run(buttplugClient.StartScanningAsync);
+                await Task.Run(buttplugClient.StartScanningAsync);
             }
             catch (Exception ex) {
                 Logger.LogError(ex.ToString());
