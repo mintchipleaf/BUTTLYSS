@@ -1,6 +1,4 @@
 ﻿using HarmonyLib;
-using MilkShake;
-using UnityEngine;
 using UnityEngine.UI;
 
 namespace BUTTLYSS
@@ -21,10 +19,10 @@ namespace BUTTLYSS
     /// <summary>
     /// Patches various movement to trigger taps
     /// </summary>
-    [HarmonyPatch(typeof(PlayerMove), nameof(PlayerMove.Set_MovementAction))]
+    [HarmonyPatch(typeof(PlayerMove), "Set_MovementAction")]
     public static class MovementPatch
     {
-        static void Set_MovementAction_Prefix(MovementAction _mA) {
+        static void Postfix(MovementAction _mA) {
             if (!Properties.ForwardPatchedEvents)
                 return;
             switch (_mA) {
@@ -49,7 +47,7 @@ namespace BUTTLYSS
 	public static class SendMessagePatch
 	{
 		[HarmonyPrefix]
-		public static void Send_ChatMessage_Prefix(ChatBehaviour __instance, string _message) {
+		public static void Send_ChatMessage_Prefix(string _message) {
             ButtplugManager.Tap();
         }
     }
