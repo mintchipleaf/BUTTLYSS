@@ -35,11 +35,6 @@ namespace BUTTLYSS
         /// </summary>
         private float timeSinceVibeUpdate;
 
-        /// <summary>
-        /// Multiplier applied to all vibration speeds
-        /// </summary>
-        private float strengthMultiplier => 0.8f;
-
 
         /// <summary>
         /// Sets up method patches
@@ -68,7 +63,8 @@ namespace BUTTLYSS
 
             if (buttplugClient == null)
                 return;
-            if (Properties.EmergencyStop)
+
+            if (Properties.EmergencyStop || Properties.InputMode == InputMode.None)
                 State.CurrentSpeed = 0;
 
             // This shouldn't be run at more than 10hz, bluetooth can't keep up. Repeated commands will be
@@ -76,8 +72,8 @@ namespace BUTTLYSS
             if (timeSinceVibeUpdate > 0.10) {
                 foreach (ButtplugClientDevice device in connectedDevices) {
                     if (device.AllowedMessages.ContainsKey("VibrateCmd")) {
-                        double vibeAmt = Math.Min(State.CurrentSpeed * strengthMultiplier, 1.0);
-                        device.SendVibrateCmd(Math.Min(State.CurrentSpeed * strengthMultiplier, 1.0));
+                        double vibeAmt = Math.Min(State.CurrentSpeed * Properties.StrengthMultiplier, 1.0);
+                        device.SendVibrateCmd(Math.Min(State.CurrentSpeed * Properties.StrengthMultiplier, 1.0));
 
                         if(vibeAmt != 0)
                             Logger.LogInfo(vibeAmt);
@@ -87,10 +83,9 @@ namespace BUTTLYSS
                 timeSinceVibeUpdate = 0;
             }
 
+            // Reset to base speed if vibe time is above command length
             if (State.VibeDuration > Properties.MaxVibeCommandLength && Properties.InputMode == InputMode.Varied)
-                State.CurrentSpeed = 0;
-            else if (Properties.InputMode == InputMode.None)
-                State.CurrentSpeed = 0;
+                State.CurrentSpeed = Properties.BaseSpeed;
         }
 
         /// <summary>

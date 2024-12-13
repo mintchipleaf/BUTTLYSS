@@ -30,10 +30,23 @@ namespace BUTTLYSS
         public static float MaxVibeCommandLength => 0.2f;
 
         /// <summary>
+        /// Multiplier applied to all vibration speeds
+        /// </summary>
+        public static float StrengthMultiplier = 0.8f;
+
+        /// <summary>
         /// Speed of all tap commands
         /// </summary>
         public static float TapSpeed = 0.1f;
 
+        /// <summary>
+        /// Slowest vibration speed
+        /// </summary>
         public static float MinSpeed = 0.05f;
+
+        /// <summary>
+        /// Speed when not actively vibrating
+        /// </summary>
+        public static float BaseSpeed = 0;
     }
 }
