@@ -33,5 +33,7 @@ namespace BUTTLYSS
         /// Speed of all tap commands
         /// </summary>
         public static float TapSpeed = 0.1f;
+
+        public static float MinSpeed = 0.05f;
     }
 }

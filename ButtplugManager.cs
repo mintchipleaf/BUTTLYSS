@@ -108,14 +108,28 @@ namespace BUTTLYSS
         }
 
         /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="value"></param>
+        /// <param name="relativeToValue"></param>
+        /// <param name="minSpeed"></param>
+        public static void VibrateRelativeMin(float value, float relativeToValue, float minSpeed) {
+            float relativeSpeed = Mathf.Max(minSpeed, value / relativeToValue);
+            Vibrate(relativeSpeed);
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="value"></param>
+        /// <param name="relativeToValue"></param>
+        public static void VibrateRelative(float value, float relativeToValue) => VibrateRelativeMin(value, relativeToValue, Properties.TapSpeed);
+
+        /// <summary>
         /// Activates small vibrations
         /// Used for very subtle inputs (menu button clicks, dashes, etc)
         /// </summary>
-        public static void Tap() {
-            if (State.CurrentSpeed < Properties.TapSpeed) {
-                Vibrate(Properties.TapSpeed);
-            }
-        }
+        public static void Tap() => Vibrate(Properties.TapSpeed);
 
 
         # region Buttplug Client

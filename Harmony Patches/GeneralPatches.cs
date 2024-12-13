@@ -48,6 +48,8 @@ namespace BUTTLYSS
 	{
 		[HarmonyPrefix]
 		public static void Send_ChatMessage_Prefix(string _message) {
+            if (!Properties.ForwardPatchedEvents)
+                return;
             ButtplugManager.Tap();
         }
     }
