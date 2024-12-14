@@ -43,11 +43,11 @@ namespace BUTTLYSS
     /// <summary>
     /// Patches chat messages being sent to trigger tap
     /// </summary>
-    [HarmonyPatch(typeof(ChatBehaviour), nameof(ChatBehaviour.Send_ChatMessage))]
-	public static class SendMessagePatch
+    [HarmonyPatch(typeof(ChatBehaviour), nameof(ChatBehaviour.Cmd_SendChatMessage))]
+	public static class CmdSendMessagePatch
 	{
 		[HarmonyPrefix]
-		public static void Send_ChatMessage_Prefix(string _message) {
+		public static void Cmd_SendChatMessage_Prefix(string _message, ChatBehaviour.ChatChannel _chatChannel) {
             if (!Properties.ForwardPatchedEvents)
                 return;
             ButtplugManager.Tap();
