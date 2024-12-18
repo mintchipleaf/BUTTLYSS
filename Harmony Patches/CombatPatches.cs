@@ -8,7 +8,7 @@ namespace BUTTLYSS
     /// Patches camera shakes to trigger vibrate
     /// </summary>
     [HarmonyPatch(typeof(ShakeInstance), nameof(ShakeInstance.UpdateShake))]
-    public class CameraPatch
+    public static class CameraPatch
     {
         static void Postfix(float deltaTime, ShakeInstance __instance) {
             if (!Properties.ForwardPatchedEvents)

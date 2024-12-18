@@ -80,6 +80,10 @@
             <HintPath>$(ATLYSS_MANAGED)\UnityEngine.UI.dll</HintPath>
             <Private>False</Private>
         </Reference>
+        <Reference Include="Unity.TextMeshPro">
+            <HintPath>$(ATLYSS_MANAGED)\Unity.TextMeshPro.dll</HintPath>
+            <Private>False</Private>
+        </Reference>
     </ItemGroup>
 
     <!-- BepInEx/core assemblies. -->
