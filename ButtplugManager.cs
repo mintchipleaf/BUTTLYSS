@@ -40,7 +40,6 @@ namespace BUTTLYSS
         /// Sets up method patches
         /// </summary>
         private void Awake() {
-            Logger.LogInfo("BUTTLYSS Awake");
             var harmony = new Harmony("BUTTLYSS");
             harmony.PatchAll();
         }
@@ -49,7 +48,9 @@ namespace BUTTLYSS
         /// Connects to buttplug client
         /// </summary>
         private void Start() {
-            Task.Run(ReconnectClient);
+            // Load properties file and connect
+            Properties.Load();
+            TryRestartClient();
         }
 
         /// <summary>
@@ -84,7 +85,7 @@ namespace BUTTLYSS
             }
 
             // Reset to base speed if vibe time is above command length
-            if (State.VibeDuration > Properties.MaxVibeCommandLength && Properties.InputMode == InputMode.Varied)
+            if (State.VibeDuration > Properties.MaxVibeDuration && Properties.InputMode == InputMode.Varied)
                 State.CurrentSpeed = Properties.BaseSpeed;
         }
 
@@ -127,7 +128,7 @@ namespace BUTTLYSS
         public static void Tap() => Vibrate(Properties.TapSpeed);
 
 
-        # region Buttplug Client
+        #region Buttplug Client
 
         /// <summary>
         /// Reconnects buttplug client
@@ -141,31 +142,8 @@ namespace BUTTLYSS
         /// Returns currently set URI of buttplug server
         /// </summary>
         /// <returns>Buttplug server URI</returns>
-        private Uri GetConnectionUri() {
-            return new Uri("ws://192.168.1.150:12345/buttplug");
-        }
-
-        /// <summary>
-        /// Shuts down and stops buttplug client
-        /// </summary>
-        /// <returns>Async task for ending scans and disconnecting</returns>
-        private async Task TryKillClient() {
-            if (buttplugClient == null)
-                return;
-
-            Logger.LogInfo("Disconnecting from Buttplug server...");
-            buttplugClient.DeviceAdded -= AddDevice;
-            buttplugClient.DeviceRemoved -= RemoveDevice;
-            buttplugClient.ScanningFinished -= ScanningFinished;
-            buttplugClient.ErrorReceived -= ErrorReceived;
-            buttplugClient.ServerDisconnect -= ServerDisconnect;
-
-            if (buttplugClient.IsScanning)
-                await buttplugClient.StopScanningAsync();
-            if (buttplugClient.Connected)
-                await buttplugClient.DisconnectAsync();
-
-            buttplugClient = null;
+        private static Uri GetConnectionUri() {
+            return new Uri($"{Properties.ServerUrl}/buttplug");
         }
 
         /// <summary>
@@ -195,6 +173,28 @@ namespace BUTTLYSS
             }
         }
 
+        /// <summary>
+        /// Shuts down and stops buttplug client
+        /// </summary>
+        /// <returns>Async task for ending scans and disconnecting</returns>
+        private async Task TryKillClient() {
+            if (buttplugClient == null)
+                return;
+
+            Logger.LogInfo("Disconnecting from Buttplug server...");
+            buttplugClient.DeviceAdded -= AddDevice;
+            buttplugClient.DeviceRemoved -= RemoveDevice;
+            buttplugClient.ScanningFinished -= ScanningFinished;
+            buttplugClient.ErrorReceived -= ErrorReceived;
+            buttplugClient.ServerDisconnect -= ServerDisconnect;
+
+            if (buttplugClient.IsScanning)
+                await buttplugClient.StopScanningAsync();
+            if (buttplugClient.Connected)
+                await buttplugClient.DisconnectAsync();
+
+            buttplugClient = null;
+        }
         #endregion
 
 
