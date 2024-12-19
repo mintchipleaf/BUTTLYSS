@@ -22,6 +22,7 @@ namespace BUTTLYSS
 
             // Base command
             if(message.Length == 9) {
+                AppendChat(chat, "Vibrations are " + (Properties.EmergencyStop ? "OFF" : "ON"));
                 AppendChat(chat, "Available commands:", includeTitle: true);
                 foreach(KeyValuePair<string,string> command in Properties.CommandInfo) {
                     AppendChat(chat, $"{command.Key} | {command.Value}");
@@ -36,6 +37,7 @@ namespace BUTTLYSS
                 case "/buttlyss stop": {
                     AppendChat(chat, "Stopping vibrations", includeTitle: true);
                     Properties.EmergencyStop = true;
+                    ButtplugClientHandler.Instance.StopAllDevices();
                     return true;
                 }
                 case "/buttlyss start": {
@@ -50,7 +52,7 @@ namespace BUTTLYSS
                 }
                 case "/buttlyss reconnect": {
                     AppendChat(chat, "Reconnecting to buttplug server", includeTitle: true);
-                    ButtplugManager.Instance.TryReconnectClient();
+                    ButtplugClientHandler.Instance.TryReconnectClient();
                     return true;
                 }
 
