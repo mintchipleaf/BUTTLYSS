@@ -6,7 +6,9 @@ using System.Security.Permissions;
 using BepInEx;
 using HarmonyLib;
 using UnityEngine;
-using ButtplugManaged;
+using Buttplug.Client;
+using Buttplug.Core;
+using System.Linq;
 
 #pragma warning disable CS0618
 
@@ -42,6 +44,8 @@ namespace BUTTLYSS
         private void Awake() {
             var harmony = new Harmony("BUTTLYSS");
             harmony.PatchAll();
+
+            Logger.LogInfo("BUTTLYSS Patches Loaded");
         }
 
         /// <summary>
@@ -72,9 +76,9 @@ namespace BUTTLYSS
             // ignored in Buttplug, but quick updates can still cause lag.
             if (timeSinceVibeUpdate > 0.10) {
                 foreach (ButtplugClientDevice device in connectedDevices) {
-                    if (device.AllowedMessages.ContainsKey("VibrateCmd")) {
+                    if (device.VibrateAttributes.Any()) {
                         double vibeAmt = Math.Min(State.CurrentSpeed * Properties.StrengthMultiplier, 1.0);
-                        device.SendVibrateCmd(Math.Min(State.CurrentSpeed * Properties.StrengthMultiplier, 1.0));
+                        device.VibrateAsync(Math.Min(State.CurrentSpeed * Properties.StrengthMultiplier, 1.0));
 
                         if(vibeAmt != 0)
                             Logger.LogInfo(vibeAmt);
@@ -104,25 +108,27 @@ namespace BUTTLYSS
         }
 
         /// <summary>
-        /// 
+        /// Vibrates an amount relative to the ratio between 'value' and 'relativeTo', but not below 'minSpeed'
+        /// Amount = 'value' / 'relativeTo'
         /// </summary>
-        /// <param name="value"></param>
-        /// <param name="relativeToValue"></param>
-        /// <param name="minSpeed"></param>
-        public static void VibrateRelativeMin(float value, float relativeToValue, float minSpeed) {
-            float relativeSpeed = Mathf.Max(minSpeed, value / relativeToValue);
+        /// <param name="value">Determines amount of vibration in ratio to 'relativeTo'</param>
+        /// <param name="relativeTo">Amount that signifies 100% vibration relative to 'value'</param>
+        /// <param name="minSpeed">Floor for vibration amount</param>
+        public static void VibrateRelativeMin(float value, float relativeTo, float minSpeed) {
+            float relativeSpeed = Mathf.Max(minSpeed, value / relativeTo);
             Vibrate(relativeSpeed);
         }
 
         /// <summary>
-        /// 
+        /// Vibrates an amount relative to the ratio between 'value' and 'relativeTo'
+        /// Amount = 'value' / 'relativeTo'
         /// </summary>
-        /// <param name="value"></param>
-        /// <param name="relativeToValue"></param>
+        /// <param name="value">Determines amount of vibration in ratio to 'relativeTo'</param>
+        /// <param name="relativeTo">Amount that signifies 100% vibration relative to 'value'</param>
         public static void VibrateRelative(float value, float relativeToValue) => VibrateRelativeMin(value, relativeToValue, Properties.TapSpeed);
 
         /// <summary>
-        /// Activates small vibrations
+        /// Triggers a small vibration
         /// Used for very subtle inputs (menu button clicks, dashes, etc)
         /// </summary>
         public static void Tap() => Vibrate(Properties.TapSpeed);
@@ -135,24 +141,20 @@ namespace BUTTLYSS
         /// </summary>
         public void TryRestartClient() {
             Logger.LogInfo("Restarting Buttplug client...");
-            Task.Run(ReconnectClient);
+            Task.Run(RestartClient);
         }
 
         /// <summary>
-        /// Returns currently set URI of buttplug server
+        /// Returns buttplug connector with currently set f of buttplug server
         /// </summary>
         /// <returns>Buttplug server URI</returns>
-        private static Uri GetConnectionUri() {
-            return new Uri($"{Properties.ServerUrl}/buttplug");
-        }
+        private static ButtplugWebsocketConnector GetConnector() => new ButtplugWebsocketConnector(new Uri($"{Properties.ServerUrl}/buttplug"));
 
         /// <summary>
-        /// Kills and recreates buttplug client, then connects it to buttplug server
+        /// Kills and recreates buttplug client, then tries to connect it to buttplug server
         /// </summary>
         /// <returns></returns>
-        private async Task ReconnectClient() {
-            Uri uri = GetConnectionUri();
-
+        private async Task RestartClient() {
             await TryKillClient();
 
             buttplugClient = new ButtplugClient("ATLYSS");
@@ -162,14 +164,42 @@ namespace BUTTLYSS
             buttplugClient.ErrorReceived += ErrorReceived;
             buttplugClient.ServerDisconnect += ServerDisconnect;
 
+            await TryConnectClient();
+        }
+
+        /// <summary>
+        /// Connects existing buttplug client to buttplug server
+        /// </summary>
+        private async Task TryConnectClient() {
+            // Connect to the server
             Logger.LogInfo("Connecting to Buttplug server...");
             try {
-                await buttplugClient.ConnectAsync(new ButtplugWebsocketConnectorOptions(uri));
-
-                await Task.Run(buttplugClient.StartScanningAsync);
+                await buttplugClient.ConnectAsync( GetConnector() );
+            }
+            catch (ButtplugClientConnectorException ex) {
+                Logger.LogError(
+                    "Can't connect to Buttplug Server!" +
+                    $"Message: {ex.InnerException.Message}");
+            }
+            catch (ButtplugHandshakeException ex) {
+                Logger.LogError(
+                    "Can't Handshake with Buttplug Server!" +
+                    $"Message: {ex.InnerException.Message}");
             }
             catch (Exception ex) {
-                Logger.LogError(ex.ToString());
+                Logger.LogError(
+                    "Buttplug Server Error!" +
+                    $"Message: {ex.InnerException.Message}");
+            }
+
+            // Scan for devices
+            try {
+                await buttplugClient.StartScanningAsync();
+            }
+            catch (ButtplugException ex) {
+                Logger.LogError(
+                    "Device Scanning failed!" +
+                    $"Message: {ex.InnerException.Message}");
             }
         }
 
@@ -188,7 +218,6 @@ namespace BUTTLYSS
             buttplugClient.ErrorReceived -= ErrorReceived;
             buttplugClient.ServerDisconnect -= ServerDisconnect;
 
-            if (buttplugClient.IsScanning)
                 await buttplugClient.StopScanningAsync();
             if (buttplugClient.Connected)
                 await buttplugClient.DisconnectAsync();
@@ -227,7 +256,7 @@ namespace BUTTLYSS
         /// Logs encountered errors
         /// </summary>
         private void ErrorReceived(object sender, ButtplugExceptionEventArgs args) {
-            Logger.LogError("Error: " + args.Exception.Message);
+            Logger.LogError($"Error: {args.Exception.Message}");
         }
 
         /// <summary>

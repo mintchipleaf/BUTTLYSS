@@ -4,11 +4,11 @@
     <!-- Generic assembly info. -->
     <PropertyGroup>
         <!-- use "net48" target if you need to work with ILGenerator -->
-        <TargetFramework>net48</TargetFramework>
+        <TargetFramework>netstandard2.1</TargetFramework>
         <AssemblyName>BUTTLYSS</AssemblyName>
         <RootNamespace>BUTTLYSS</RootNamespace>
         <Product>Unofficial mod for ATLYSS to add buttplug.io support</Product>
-        <Version>0.0.1</Version>
+        <Version>0.2.0</Version>
         <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
         <LangVersion>latest</LangVersion>
         <CopyLocalLockFileAssemblies>true</CopyLocalLockFileAssemblies>
@@ -50,8 +50,8 @@
             <HintPath>$(ATLYSS_MANAGED)\Mirror.dll</HintPath>
             <Private>False</Private>
         </Reference>
-        <Reference Include="ButtplugManaged">
-            <HintPath>lib\ButtplugManaged.dll</HintPath>
+        <Reference Include="Buttplug">
+            <HintPath>lib\Buttplug.dll</HintPath>
         </Reference>
 
 

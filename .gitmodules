@@ -1,3 +1,3 @@
-[submodule "ManagedButtplugIo"]
-	path = ManagedButtplugIo
-	url = https://github.com/Er1807/ManagedButtplugIo.git
+[submodule "buttplug-csharp"]
+	path = buttplug-csharp
+	url = https://github.com/buttplugio/buttplug-csharp
