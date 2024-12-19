@@ -4,6 +4,6 @@
     {
         public const string GUID = "dev.mintchipleaf.buttlyss";
         public const string NAME = "BUTTLYSS";
-        public const string VERSION = "0.2.0";
+        public const string VERSION = "0.2.1";
     }
 }

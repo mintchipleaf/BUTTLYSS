@@ -41,7 +41,8 @@ namespace BUTTLYSS
         public static Dictionary<string,string> CommandInfo = new Dictionary<string, string> {
             {"Stop", "Immediately stops all vibration"},
             {"Start", "Starts vibrations again after using 'Stop'"},
-            {"Reload", "Updates preferences from settings file"}
+            {"Reload", "Updates preferences from settings file"},
+            {"Reconnect", "Attempts to reconnect to server URL in settings"}
         };
 
         /// <summary>

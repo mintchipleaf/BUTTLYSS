@@ -47,7 +47,7 @@ namespace BUTTLYSS
 	{
 		[HarmonyPrefix]
 		public static bool Cmd_SendChatMessage_Prefix(string _message, ChatBehaviour.ChatChannel _chatChannel, ChatBehaviour __instance) {
-            // Check for commands first
+            // Check for commands first, and ignore all subsequent chat handling
             if(ButtlyssConsole.TryHandleChatCommands(_message, __instance))
                 return false;
 

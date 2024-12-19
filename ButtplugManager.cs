@@ -24,14 +24,21 @@ namespace BUTTLYSS
     public class ButtplugManager : BaseUnityPlugin
     {
         /// <summary>
+        /// Singleton instance of ButtplugManager
+        /// </summary>
+        public static ButtplugManager Instance {
+            get {
+                if (instance == null)
+                    instance = new ButtplugManager();
+                return instance;
+            }
+        }
+        private static ButtplugManager instance;
+
+        /// <summary>
         /// Active buttplug client
         /// </summary>
         private ButtplugClient buttplugClient;
-        /// <summary>
-        /// List of currently connected buttplug devices received from server
-        /// </summary>
-        private readonly List<ButtplugClientDevice> connectedDevices = new List<ButtplugClientDevice>();
-
         /// <summary>
         /// Time elapsed since last vibration command sent to server
         /// </summary>
@@ -42,6 +49,8 @@ namespace BUTTLYSS
         /// Sets up method patches
         /// </summary>
         private void Awake() {
+            instance = this;
+
             var harmony = new Harmony("BUTTLYSS");
             harmony.PatchAll();
 
@@ -75,7 +84,7 @@ namespace BUTTLYSS
             // This shouldn't be run at more than 10hz, bluetooth can't keep up. Repeated commands will be
             // ignored in Buttplug, but quick updates can still cause lag.
             if (timeSinceVibeUpdate > 0.10) {
-                foreach (ButtplugClientDevice device in connectedDevices) {
+                foreach (ButtplugClientDevice device in buttplugClient.Devices) {
                     if (device.VibrateAttributes.Any()) {
                         double vibeAmt = Math.Min(State.CurrentSpeed * Properties.StrengthMultiplier, 1.0);
                         device.VibrateAsync(Math.Min(State.CurrentSpeed * Properties.StrengthMultiplier, 1.0));
@@ -137,11 +146,20 @@ namespace BUTTLYSS
         #region Buttplug Client
 
         /// <summary>
-        /// Reconnects buttplug client
+        /// Fully destroys and re-creates buttplug client, then connects it
         /// </summary>
-        public void TryRestartClient() {
+        /// <returns>Restart Client task</returns>
+        public Task TryRestartClient() {
             Logger.LogInfo("Restarting Buttplug client...");
-            Task.Run(RestartClient);
+            return Task.Run(RestartClientAsync);
+        }
+
+        /// <summary>
+        /// Connects buttplug client to server
+        /// </summary>
+        /// <returns>Connect Client task</returns>
+        public Task TryReconnectClient() {
+            return Task.Run(ReconnectClientAsync);
         }
 
         /// <summary>
@@ -154,7 +172,7 @@ namespace BUTTLYSS
         /// Kills and recreates buttplug client, then tries to connect it to buttplug server
         /// </summary>
         /// <returns></returns>
-        private async Task RestartClient() {
+        private async Task RestartClientAsync() {
             await TryKillClient();
 
             buttplugClient = new ButtplugClient("ATLYSS");
@@ -164,13 +182,13 @@ namespace BUTTLYSS
             buttplugClient.ErrorReceived += ErrorReceived;
             buttplugClient.ServerDisconnect += ServerDisconnect;
 
-            await TryConnectClient();
+            await ConnectClientAsync();
         }
 
         /// <summary>
-        /// Connects existing buttplug client to buttplug server
+        /// Attempts to connect existing buttplug client to buttplug server
         /// </summary>
-        private async Task TryConnectClient() {
+        private async Task ConnectClientAsync() {
             // Connect to the server
             Logger.LogInfo("Connecting to Buttplug server...");
             try {
@@ -204,6 +222,16 @@ namespace BUTTLYSS
         }
 
         /// <summary>
+        /// 
+        /// </summary>
+        private async Task ReconnectClientAsync() {
+            if(buttplugClient.Connected)
+                await buttplugClient.DisconnectAsync();
+
+            await ConnectClientAsync();
+        }
+
+        /// <summary>
         /// Shuts down and stops buttplug client
         /// </summary>
         /// <returns>Async task for ending scans and disconnecting</returns>
@@ -218,7 +246,7 @@ namespace BUTTLYSS
             buttplugClient.ErrorReceived -= ErrorReceived;
             buttplugClient.ServerDisconnect -= ServerDisconnect;
 
-                await buttplugClient.StopScanningAsync();
+            await buttplugClient.StopScanningAsync();
             if (buttplugClient.Connected)
                 await buttplugClient.DisconnectAsync();
 
@@ -234,7 +262,6 @@ namespace BUTTLYSS
         /// </summary>
         private void AddDevice(object sender, DeviceAddedEventArgs args) {
             Logger.LogInfo("Device Added: " + args.Device.Name);
-            connectedDevices.Add(args.Device);
         }
 
         /// <summary>
@@ -242,7 +269,6 @@ namespace BUTTLYSS
         /// </summary>
         private void RemoveDevice(object sender, DeviceRemovedEventArgs args) {
             Logger.LogInfo("Device Removed: " + args.Device.Name);
-            connectedDevices.Remove(args.Device);
         }
 
         /// <summary>
