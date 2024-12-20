@@ -9,7 +9,8 @@ namespace BUTTLYSS
     [HarmonyPatch(typeof(Button), "Press")]
     public static class ButtonPatch
     {
-        public static void Prefix() {
+        [HarmonyPrefix]
+        public static void Press() {
             if (!Properties.ForwardPatchedEvents)
                 return;
             ButtplugManager.Tap();
@@ -22,7 +23,8 @@ namespace BUTTLYSS
     [HarmonyPatch(typeof(PlayerMove), "Set_MovementAction")]
     public static class MovementPatch
     {
-        public static void Postfix(MovementAction _mA) {
+        [HarmonyPostfix]
+        public static void SetMovementAction(MovementAction _mA) {
             if (!Properties.ForwardPatchedEvents)
                 return;
             switch (_mA) {
@@ -46,7 +48,7 @@ namespace BUTTLYSS
 	public static class CmdSendMessagePatch
 	{
 		[HarmonyPrefix]
-		public static bool Cmd_SendChatMessage_Prefix(string _message, ChatBehaviour.ChatChannel _chatChannel, ChatBehaviour __instance) {
+		public static bool SendChatMessage(string _message, ChatBehaviour.ChatChannel _chatChannel, ChatBehaviour __instance) {
             // Check for commands first, and ignore all subsequent chat handling
             if(ButtlyssConsole.TryHandleChatCommands(_message, __instance))
                 return false;

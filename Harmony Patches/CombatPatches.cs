@@ -10,7 +10,8 @@ namespace BUTTLYSS
     [HarmonyPatch(typeof(ShakeInstance), nameof(ShakeInstance.UpdateShake))]
     public static class CameraPatch
     {
-        static void Postfix(float deltaTime, ShakeInstance __instance) {
+        [HarmonyPostfix]
+        static void UpdateShake(float deltaTime, ShakeInstance __instance) {
             if (!Properties.ForwardPatchedEvents)
                 return;
             ButtplugManager.Vibrate(Mathf.Clamp01(__instance.CurrentStrength / __instance.ShakeParameters.strength));
@@ -24,7 +25,7 @@ namespace BUTTLYSS
 	public static class SkillPatch
 	{
 		[HarmonyPrefix]
-		public static void Postfix(string _skillName) {
+		public static void InitCast(string _skillName) {
             if (!Properties.ForwardPatchedEvents)
                 return;
             // ButtplugManager.Vibrate(0.5f);
@@ -38,7 +39,7 @@ namespace BUTTLYSS
 	public static class SubtractHealthPatch
 	{
 		[HarmonyPrefix]
-		public static void Subtract_health_Prefix(StatusEntity __instance, int _value) {
+		public static void SubtractHealth(StatusEntity __instance, int _value) {
             if (!Properties.ForwardPatchedEvents)
                 return;
             ButtplugManager.VibrateRelative(_value , __instance._currentHealth);
@@ -49,7 +50,7 @@ namespace BUTTLYSS
 	public static class ChangeStaminaPatch
 	{
 		[HarmonyPrefix]
-		public static void Change_Stamina_Prefix(StatusEntity __instance, int _value) {
+		public static void ChangeStamina(StatusEntity __instance, int _value) {
             if (!Properties.ForwardPatchedEvents)
                 return;
             ButtplugManager.VibrateRelative(_value , __instance._currentStamina);
@@ -60,7 +61,7 @@ namespace BUTTLYSS
 	public static class ChangeManaPatch
 	{
 		[HarmonyPrefix]
-		public static void Change_Mana_Prefix(StatusEntity __instance, int _value) {
+		public static void ChangeMana(StatusEntity __instance, int _value) {
             if (!Properties.ForwardPatchedEvents)
                 return;
             ButtplugManager.VibrateRelative(_value , __instance._currentMana);

@@ -8,7 +8,8 @@ namespace BUTTLYSS
     [HarmonyPatch(typeof(PlayerInventory), "Add_Item")]
     public static class AddItempatch
     {
-    	static void Postfix(ItemData _itemData) {
+        [HarmonyPostfix]
+    	static void AddItem(ItemData _itemData) {
             if (!Properties.ForwardPatchedEvents)
                 return;
             ButtplugManager.Tap();
@@ -21,7 +22,8 @@ namespace BUTTLYSS
     [HarmonyPatch(typeof(PlayerInventory), "Remove_Item")]
     public static class RemoveItemPatch
     {
-    	static void Postfix(ItemData _itemData, int _quantity) {
+        [HarmonyPostfix]
+    	static void RemoveItem(ItemData _itemData, int _quantity) {
             if (!Properties.ForwardPatchedEvents)
                 return;
             ButtplugManager.Tap();
