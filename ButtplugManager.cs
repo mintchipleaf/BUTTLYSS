@@ -15,7 +15,7 @@ namespace BUTTLYSS
     /// <summary>
     /// Manages overhead and state for harmony patching and buttplug use
     /// </summary>
-    [BepInPlugin(PluginInfo.GUID, PluginInfo.NAME, PluginInfo.VERSION)]
+    [BepInPlugin(MyPluginInfo.PLUGIN_GUID, MyPluginInfo.PLUGIN_NAME, MyPluginInfo.PLUGIN_VERSION)]
     [BepInProcess("ATLYSS.exe")]
     public class ButtplugManager : BaseUnityPlugin
     {
@@ -35,7 +35,7 @@ namespace BUTTLYSS
         private void Awake() {
             buttplugClientHandler = new ButtplugClientHandler(Logger);
 
-            new Harmony(PluginInfo.GUID).PatchAll();
+            new Harmony(MyPluginInfo.PLUGIN_GUID).PatchAll();
 
             Logger.LogInfo("BUTTLYSS Patches Loaded");
         }

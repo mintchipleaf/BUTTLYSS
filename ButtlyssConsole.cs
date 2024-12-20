@@ -70,7 +70,7 @@ namespace BUTTLYSS
         /// <param name="includeTitle">Include the plugin name before the text</param>
         public static void AppendChat(ChatBehaviour chat, string text, bool includeTitle = false) {
             if(includeTitle)
-                text = $"[{PluginInfo.NAME}] {text}";
+                text = $"[{MyPluginInfo.PLUGIN_NAME}] {text}";
 
             chat._chatText.text += $"\n{text}";
         }
