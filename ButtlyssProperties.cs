@@ -54,7 +54,7 @@ namespace BUTTLYSS
             {"StrengthMultiplier", "Multiplier applied to all vibrations"},
             {"TapSpeed", "Vibration speed for small taps"},
             {"MinSpeed", "Lowest possible vibration speed"},
-            {"BaseSpeed", "Speed to vibrate when no vibration events are occuring"}
+            {"BaseSpeed", "Speed to vibrate when idle, (no vibration events occuring)"}
         };
 
         /// <summary>
