@@ -30,7 +30,7 @@ os.chdir(os.path.dirname(os.path.abspath(__file__)))
 # Let's rebuild the project to make sure it's all good
 os.chdir('..')
 
-slns = glob.glob("*.sln")
+slns = glob.glob("../*.sln")
 csprojs = glob.glob("*.csproj")
 
 if len(slns) != 1:
