@@ -1,7 +1,7 @@
 ﻿using HarmonyLib;
 using UnityEngine.UI;
 
-namespace BUTTLYSS
+namespace BUTTLYSS.Patches
 {
     /// <summary>
     /// Patches menu buttons to trigger tap
@@ -13,6 +13,7 @@ namespace BUTTLYSS
         public static void Press() {
             if (!Properties.ForwardPatchedEvents)
                 return;
+
             ButtplugManager.Tap();
         }
     }
@@ -27,6 +28,7 @@ namespace BUTTLYSS
         public static void SetMovementAction(MovementAction _mA) {
             if (!Properties.ForwardPatchedEvents)
                 return;
+
             switch (_mA) {
                 case MovementAction.JUMP:
                 case MovementAction.DASH:
@@ -56,6 +58,7 @@ namespace BUTTLYSS
             // It's something else so just tap
             if (!Properties.ForwardPatchedEvents)
                 return true;
+
             ButtplugManager.Tap();
             return true;
         }

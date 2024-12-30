@@ -55,8 +55,8 @@ namespace BUTTLYSS
         private void Update() {
             State.MaxSpeedThisFrame = 0;
 
-            State.VibeDuration += Time.deltaTime;
-            timeSinceVibeUpdate += Time.deltaTime;
+            State.VibeDuration += Time.unscaledDeltaTime;
+            timeSinceVibeUpdate += Time.unscaledDeltaTime;
 
             if (buttplugClientHandler == null)
                 return;
@@ -85,7 +85,7 @@ namespace BUTTLYSS
             State.ResetVibeDuration();
 
             // Vibrate at the hightest current speed
-            float newSpeed = Mathf.Clamp(speed, 0, 1);
+            float newSpeed = Mathf.Clamp01(speed);
             newSpeed = Mathf.Max(newSpeed, State.MaxSpeedThisFrame);
 
             State.CurrentSpeed = newSpeed;
@@ -98,18 +98,20 @@ namespace BUTTLYSS
         /// <param name="value">Determines amount of vibration in ratio to 'relativeTo'</param>
         /// <param name="relativeTo">Amount that signifies 100% vibration relative to 'value'</param>
         /// <param name="minSpeed">Floor for vibration amount</param>
-        public static void VibrateRelativeMin(float value, float relativeTo, float minSpeed) {
+        /// <param name="scale">Value to scale the vibration by</param>
+        public static void VibrateRelativeMin(float value, float relativeTo, float minSpeed, float scale = 1) {
             float relativeSpeed = Mathf.Max(minSpeed, value / relativeTo);
-            Vibrate(relativeSpeed);
+            Vibrate(relativeSpeed * scale);
         }
 
         /// <summary>
-        /// Vibrates an amount relative to the ratio between 'value' and 'relativeTo'
+        /// Vibrates an amount relative to the ratio between 'value' and 'relativeTo'. Won't go lower than a Tap
         /// Amount = 'value' / 'relativeTo'
         /// </summary>
         /// <param name="value">Determines amount of vibration in ratio to 'relativeTo'</param>
         /// <param name="relativeTo">Amount that signifies 100% vibration relative to 'value'</param>
-        public static void VibrateRelative(float value, float relativeToValue) => VibrateRelativeMin(value, relativeToValue, Properties.TapSpeed);
+        /// <param name="scale">Value to scale the vibration by</param>
+        public static void VibrateRelative(float value, float relativeToValue, float scale = 1) => VibrateRelativeMin(value, relativeToValue, Properties.TapSpeed, scale);
 
         /// <summary>
         /// Triggers a small vibration

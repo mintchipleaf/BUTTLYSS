@@ -74,7 +74,7 @@ namespace BUTTLYSS
         /// <summary>
         /// Whether event-specific vibrations should be sent to buttplug
         /// </summary>
-        public static bool ForwardPatchedEvents => InputMode == InputMode.Varied;
+        public static bool ForwardPatchedEvents => InputMode == InputMode.Varied && !EmergencyStop;
 
         /// <summary>
         /// Longest duration for a single vibration command
@@ -101,6 +101,10 @@ namespace BUTTLYSS
         /// </summary>
         public static float BaseSpeed = 0;
 
+        /// <summary>
+        /// Multiplier applied to screenshake-triggered vibrations
+        /// </summary>
+        public static float ScreenshakeMultiplier = 0.5f;
 
         #region I/O
 

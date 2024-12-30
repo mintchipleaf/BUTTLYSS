@@ -1,6 +1,6 @@
 using HarmonyLib;
 
-namespace BUTTLYSS
+namespace BUTTLYSS.Patches
 {
     /// <summary>
     /// Patches item addition to inventory to trigger tap
@@ -9,10 +9,12 @@ namespace BUTTLYSS
     public static class AddItempatch
     {
         [HarmonyPostfix]
-    	static void AddItem(ItemData _itemData) {
+    	static void AddItem(PlayerInventory __instance, ItemData _itemData) {
             if (!Properties.ForwardPatchedEvents)
                 return;
-            ButtplugManager.Tap();
+
+            if (__instance.isLocalPlayer)
+                ButtplugManager.Tap();
         }
     }
 
@@ -23,10 +25,12 @@ namespace BUTTLYSS
     public static class RemoveItemPatch
     {
         [HarmonyPostfix]
-    	static void RemoveItem(ItemData _itemData, int _quantity) {
+    	static void RemoveItem(PlayerInventory __instance, ItemData _itemData, int _quantity) {
             if (!Properties.ForwardPatchedEvents)
                 return;
-            ButtplugManager.Tap();
+
+            if (__instance.isLocalPlayer)
+                ButtplugManager.Tap();
         }
     }
 }
