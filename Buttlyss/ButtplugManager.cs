@@ -74,7 +74,7 @@ namespace BUTTLYSS
 
             // Reset to base speed if vibe time is above command length
             if (State.VibeDuration > Properties.MaxVibeDuration && Properties.InputMode == InputMode.Varied)
-                State.CurrentSpeed = Properties.BaseSpeed;
+                State.CurrentSpeed = Properties.IdleSpeed;
         }
 
         /// <summary>

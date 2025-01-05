@@ -1,6 +1,6 @@
 {
     "name": "BUTTLYSS",
-    "version_number": "0.2.2",
+    "version_number": "0.2.3",
     "website_url": "https://github.com/mintchipleaf/BUTTLYSS",
     "description": " Mod for ATLYSS that adds buttplug.io support",
     "dependencies": ["BepInEx-BepInExPack-5.4.2100"]

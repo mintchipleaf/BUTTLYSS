@@ -14,11 +14,24 @@ namespace BUTTLYSS
     /// </summary>
     public class SerializedProperties {
         public string ServerUrl;
+
         public float MaxVibeDuration;
         public float StrengthMultiplier;
         public float TapSpeed;
         public float MinSpeed;
         public float BaseSpeed;
+
+        // Patch Control
+        public bool VibrateOnUIButtons = true;
+        public bool VibrateOnMoveActions = true;
+        public bool VibrateOnChat = true;
+        public bool VibrateOnItemAddRemove = true;
+        public bool VibrateOnCameraShake = true;
+        public bool VibrateOnHeal = true;
+        public bool VibrateOnHurt = true;
+        public bool VibrateOnStaminaUse = true;
+        public bool VibrateOnDealDamage = true;
+
     }
 
     /// <summary>
@@ -63,18 +76,19 @@ namespace BUTTLYSS
         public static bool EmergencyStop = false;
 
         /// <summary>
-        /// Location of Intiface server including protocol, address, and port
-        /// </summary>
-        public static string ServerUrl = "ws://192.168.1.150:12345";
-
-        /// <summary>
         /// Type of vibration inputs
         /// </summary>
         public static InputMode InputMode = InputMode.Varied;
+
         /// <summary>
         /// Whether event-specific vibrations should be sent to buttplug
         /// </summary>
         public static bool ForwardPatchedEvents => InputMode == InputMode.Varied && !EmergencyStop;
+
+        /// <summary>
+        /// Location of Intiface server including protocol, address, and port
+        /// </summary>
+        public static string ServerUrl = "ws://localhost:12345";
 
         /// <summary>
         /// Longest duration for a single vibration command
@@ -99,12 +113,63 @@ namespace BUTTLYSS
         /// <summary>
         /// Speed when not actively vibrating
         /// </summary>
-        public static float BaseSpeed = 0;
+        public static float IdleSpeed = 0;
 
         /// <summary>
         /// Multiplier applied to screenshake-triggered vibrations
         /// </summary>
         public static float ScreenshakeMultiplier = 0.5f;
+
+
+        #region Properties - Patch Control
+
+        // General
+
+        /// <summary>
+        /// Whether to vibrate when UI buttons are pressed
+        /// </summary>
+        public static bool VibrateOnUIButtons = true;
+        /// <summary>
+        /// Whether to vibrate when movement actions are performed
+        /// </summary>
+        public static bool VibrateOnMoveActions = true;
+        /// <summary>
+        /// Whether to vibrate when chat messages are sent
+        /// </summary>
+        public static bool VibrateOnChat = true;
+
+        // Interact
+
+        /// <summary>
+        /// Whether to vibrate when items are added or removed from the inventory
+        /// </summary>
+        public static bool VibrateOnItemAddRemove = true;
+
+        // Combat
+
+        /// <summary>
+        /// Whether to vibrate when camera shakes occur
+        /// </summary>
+        public static bool VibrateOnCameraShake = true;
+        /// <summary>
+        /// Whether to vibrate when healing health
+        /// </summary>
+        public static bool VibrateOnHeal = true;
+        /// <summary>
+        /// Whether to vibrate when losing health
+        /// </summary>
+        public static bool VibrateOnHurt = true;
+        /// <summary>
+        /// Whether to vibrate when stamina is used
+        /// </summary>
+        public static bool VibrateOnStaminaUse = true;
+        /// <summary>
+        /// Whether to vibrate when dealing damage
+        /// </summary>
+        public static bool VibrateOnDealDamage = true;
+
+        #endregion
+
 
         #region I/O
 
@@ -117,7 +182,16 @@ namespace BUTTLYSS
             serializedProperties.StrengthMultiplier = StrengthMultiplier;
             serializedProperties.TapSpeed = TapSpeed;
             serializedProperties.MinSpeed = MinSpeed;
-            serializedProperties.BaseSpeed = BaseSpeed;
+            serializedProperties.BaseSpeed = IdleSpeed;
+            serializedProperties.VibrateOnUIButtons = VibrateOnUIButtons;
+            serializedProperties.VibrateOnMoveActions = VibrateOnMoveActions;
+            serializedProperties.VibrateOnChat = VibrateOnChat;
+            serializedProperties.VibrateOnItemAddRemove = VibrateOnItemAddRemove;
+            serializedProperties.VibrateOnCameraShake = VibrateOnCameraShake;
+            serializedProperties.VibrateOnHeal = VibrateOnHeal;
+            serializedProperties.VibrateOnHurt = VibrateOnHurt;
+            serializedProperties.VibrateOnStaminaUse = VibrateOnStaminaUse;
+            serializedProperties.VibrateOnDealDamage = VibrateOnDealDamage;
 
             string contents = JsonUtility.ToJson(serializedProperties, prettyPrint: true);
             File.WriteAllText(settingsFilePath, contents);
@@ -128,8 +202,6 @@ namespace BUTTLYSS
         /// </summary>
         public static void Load() {
             // Create folder and file as needed
-            // if(!Directory.Exists(settingsFolderPath))
-            //     Directory.CreateDirectory(settingsFolderPath);
             if(!File.Exists(settingsFilePath))
                 Save();
 
@@ -141,7 +213,18 @@ namespace BUTTLYSS
             StrengthMultiplier = serializedProperties.StrengthMultiplier;
             TapSpeed = serializedProperties.TapSpeed;
             MinSpeed = serializedProperties.MinSpeed;
-            BaseSpeed = serializedProperties.BaseSpeed;
+            IdleSpeed = serializedProperties.BaseSpeed;
+            VibrateOnUIButtons = serializedProperties.VibrateOnUIButtons;
+            VibrateOnMoveActions = serializedProperties.VibrateOnMoveActions;
+            VibrateOnChat = serializedProperties.VibrateOnChat;
+            VibrateOnItemAddRemove = serializedProperties.VibrateOnItemAddRemove;
+            VibrateOnCameraShake = serializedProperties.VibrateOnCameraShake;
+            VibrateOnHeal = serializedProperties.VibrateOnHeal;
+            VibrateOnHurt = serializedProperties.VibrateOnHurt;
+            VibrateOnStaminaUse = serializedProperties.VibrateOnStaminaUse;
+            VibrateOnDealDamage = serializedProperties.VibrateOnDealDamage;
+
+            Save();
         }
 
         #endregion

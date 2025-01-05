@@ -12,7 +12,7 @@ namespace BUTTLYSS.Patches
     {
         [HarmonyPostfix]
         static void UpdateShake(ShakeInstance __instance, float deltaTime) {
-            if (!Properties.ForwardPatchedEvents)
+            if (!Properties.ForwardPatchedEvents || !Properties.VibrateOnCameraShake)
                 return;
 
             ButtplugManager.VibrateRelativeMin(__instance.CurrentStrength, __instance.ShakeParameters.strength, Properties.MinSpeed, Properties.ScreenshakeMultiplier);
@@ -27,7 +27,7 @@ namespace BUTTLYSS.Patches
 	{
 		[HarmonyPrefix]
 		public static void InitCast(PlayerCasting __instance, string _skillName) {
-            if (!Properties.ForwardPatchedEvents)
+            if (!Properties.ForwardPatchedEvents || !Properties.VibrateOnCameraShake)
                 return;
 
             if (__instance._player == null || !__instance._player.isLocalPlayer)
@@ -48,7 +48,7 @@ namespace BUTTLYSS.Patches
             ButtplugManager.Tap();
             __state = 0;
 
-            if (!Properties.ForwardPatchedEvents)
+            if (!Properties.ForwardPatchedEvents || !Properties.VibrateOnHeal)
                 return;
 
             if (__instance._isPlayer == null || !__instance._isPlayer.isLocalPlayer)
@@ -60,7 +60,7 @@ namespace BUTTLYSS.Patches
 		[HarmonyPostfix]
 		public static void AddHealth_Postfix(StatusEntity __instance, int _value, float __state) {
             ButtplugManager.Tap();
-            if (!Properties.ForwardPatchedEvents)
+            if (!Properties.ForwardPatchedEvents || !Properties.VibrateOnHeal)
                 return;
 
             if (__instance._isPlayer == null || !__instance._isPlayer.isLocalPlayer)
@@ -79,7 +79,7 @@ namespace BUTTLYSS.Patches
     public static class SubtractHealthPatch {
 		[HarmonyPrefix]
 		public static void SubtractHealth(StatusEntity __instance, int _value) {
-           if (!Properties.ForwardPatchedEvents)
+            if (!Properties.ForwardPatchedEvents || !Properties.VibrateOnHeal)
                 return;
 
             if (__instance._isPlayer == null || !__instance._isPlayer.isLocalPlayer)
@@ -98,7 +98,7 @@ namespace BUTTLYSS.Patches
 	{
 		[HarmonyPrefix]
 		public static void ChangeStamina(StatusEntity __instance, int _value) {
-            if (!Properties.ForwardPatchedEvents)
+            if (!Properties.ForwardPatchedEvents || !Properties.VibrateOnStaminaUse)
                 return;
 
             if (__instance._isPlayer == null || !__instance._isPlayer.isLocalPlayer)
@@ -137,7 +137,7 @@ namespace BUTTLYSS.Patches
 	{
 		[HarmonyPrefix]
 		public static void Apply_Damage(CombatCollider __instance, ITakeDamage _damageable, int _passedLevel, int _damageValue, bool _isCriticalHit, ScriptableCombatElement _combatElement, Vector3 _hitPoint) {
-            if (!Properties.ForwardPatchedEvents)
+            if (!Properties.ForwardPatchedEvents || !Properties.VibrateOnDealDamage)
                 return;
 
             // Only care about damage dealt by THIS player
