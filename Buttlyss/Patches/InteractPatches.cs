@@ -10,7 +10,7 @@ namespace BUTTLYSS.Patches
     {
         [HarmonyPostfix]
     	static void AddItem(PlayerInventory __instance, ItemData _itemData) {
-            if (!Properties.ForwardPatchedEvents)
+            if (!Properties.ForwardPatchedEvents || !Properties.VibrateOnItemAddRemove)
                 return;
 
             if (__instance.isLocalPlayer)
@@ -26,7 +26,7 @@ namespace BUTTLYSS.Patches
     {
         [HarmonyPostfix]
     	static void RemoveItem(PlayerInventory __instance, ItemData _itemData, int _quantity) {
-            if (!Properties.ForwardPatchedEvents)
+            if (!Properties.ForwardPatchedEvents || !Properties.VibrateOnItemAddRemove)
                 return;
 
             if (__instance.isLocalPlayer)

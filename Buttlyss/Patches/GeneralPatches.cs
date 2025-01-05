@@ -11,7 +11,7 @@ namespace BUTTLYSS.Patches
     {
         [HarmonyPrefix]
         public static void Press() {
-            if (!Properties.ForwardPatchedEvents)
+            if (!Properties.ForwardPatchedEvents || !Properties.VibrateOnUIButtons)
                 return;
 
             ButtplugManager.Tap();
@@ -26,7 +26,7 @@ namespace BUTTLYSS.Patches
     {
         [HarmonyPostfix]
         public static void SetMovementAction(MovementAction _mA) {
-            if (!Properties.ForwardPatchedEvents)
+            if (!Properties.ForwardPatchedEvents || !Properties.VibrateOnMoveActions)
                 return;
 
             switch (_mA) {
@@ -56,7 +56,7 @@ namespace BUTTLYSS.Patches
                 return false;
 
             // It's something else so just tap
-            if (!Properties.ForwardPatchedEvents)
+            if (!Properties.ForwardPatchedEvents || !Properties.VibrateOnChat)
                 return true;
 
             ButtplugManager.Tap();
