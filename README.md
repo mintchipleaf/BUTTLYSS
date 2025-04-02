@@ -1,4 +1,4 @@
-# BUTTLYSS
+# BUTTLYSS [*BETA*]
 ![GitHub Release](https://img.shields.io/github/v/release/mintchipleaf/BUTTLYSS?logo=github&style=flat-square) 
 ![Thunderstore Version](https://img.shields.io/thunderstore/v/mintchipleaf/BUTTLYSS?logo=thunderstore&logoColor=f5f5f5&style=flat-square)\
 A [BepInEx](https://github.com/BepInEx/BepInEx) mod for [ATLYSS](http://atlyssgame.com) that adds [buttplug.io](https://buttplug.io/) support
