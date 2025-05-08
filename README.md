@@ -1,6 +1,6 @@
-# BUTTLYSS [*BETA*]
-![GitHub Release](https://img.shields.io/github/v/release/mintchipleaf/BUTTLYSS?include_prereleases&logo=github&style=flat-square) 
-![Thunderstore Version](https://img.shields.io/thunderstore/v/mintchipleaf/BUTTLYSS?logo=thunderstore&logoColor=f5f5f5&style=flat-square)\
+# 🍑BUTTLYSS [*BETA*]
+[![GitHub Release](https://img.shields.io/github/v/release/mintchipleaf/BUTTLYSS?include_prereleases&logo=github&style=for-the-badge)](https://github.com/mintchipleaf/BUTTLYSS/releases/latest)
+[![Thunderstore Version](https://img.shields.io/thunderstore/v/mintchipleaf/BUTTLYSS?logo=thunderstore&logoColor=f5f5f5&style=for-the-badge)]()\
 A [BepInEx](https://github.com/BepInEx/BepInEx) mod for [ATLYSS](http://atlyssgame.com) that adds [buttplug.io](https://buttplug.io/) support
 
 **BETA NOTE**: *Most patched combat/status functions aren't currently called when player is a network client (i.e. when joining a multiplayer server.) This results in greatly-reduced functionality compared to single player or when hosting.*
